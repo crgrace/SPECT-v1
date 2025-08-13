@@ -21,7 +21,7 @@ always @(*) qn_dly = #1 qn;
 always @(*) rstn_dly = #1 reset_n;
   
   //TP: updated the to 65nm D Flip-flop with Async Clear 
-  DFCND2LVT tff_inst(
+  DFCND2 tff_inst(
     .Q(q),
     .QN(qn),
     .D(qn_dly),
