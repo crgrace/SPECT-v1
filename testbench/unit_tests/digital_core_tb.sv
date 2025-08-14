@@ -16,7 +16,7 @@
 module digital_core_tb();
     timeunit 1ns/10ps;
     localparam NUMREGS = 9;
-    localparam NUMTESTS = 10000; // run for 400 ms
+    localparam NUMTRIALS = 10000; // run for 400 ms
 
 // config bits
 
@@ -71,7 +71,7 @@ logic debug;
        
 initial begin
     verbose = FALSE;
-    debug = TRUE;
+    debug = FALSE;
     reset_n = 1;
     clk_free_running = 0;
     txclk_fpga = 1;
@@ -85,12 +85,13 @@ initial begin
     #100 reset_n = 0;
     #100 reset_n = 1;
 //    #100 clk_en = 0;
+    $display("\n");
 #1000   isDefaultConfig();
-#1000   randomTestExternalInterface(NUMTESTS,debug);
+#1000   randomTestExternalInterface(NUMTRIALS,debug);
 
 // test RX rejection of run start bit
     #1000 clk_en = 1;
-    #1000 $display("Testing runt start bit rejection");
+    #1000 $display("\nTesting runt start bit rejection");
     posi_tx_en = 0;
     #15 posi_tx_en = 1;
     #1000 clk_en = 0;

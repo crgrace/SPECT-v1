@@ -3,6 +3,7 @@
 .bak
 .nfs*
 *.wlf
+*etch*
 transcript
 *.txt
 *.sav

@@ -17,11 +17,12 @@
 module external_interface_tb();
     timeunit 1ns/10ps;
     localparam NUMREGS = 9;
+    localparam NUMTRIALS = 10000;
 
 // local digital_signals
 
 logic reset_n;          // active low reset
-logic clk;           // system clock (sent to FPS)
+logic clk;           // system clock (sent to SPECT-v1)
 logic clk_free_running;       // clock ANDed with en to get system clk
 logic clk_en;       // high to enable clk
 
@@ -34,7 +35,7 @@ logic posi_tx_en; // high to enable posi
 logic [7:0] config_bits [0:NUMREGS-1]; // output bits
 
 // external FPGA signals
-logic txclk_fpga; // clock used to define data sent to FPS
+logic txclk_fpga; // clock used to define data sent to SPECT-v1
 logic tx_busy_fpga;
 logic ld_tx_data_fpga;
 logic [17:0] tx_data_fpga;
@@ -51,12 +52,14 @@ logic [7:0] rcvd_data_address;
 logic rcvd_parity_bit;
 logic first; // suppress first readout
 logic verbose;
+logic debug;
 `include "../tasks/uart_tasks.sv"
 `include "../tasks/uart_tests.sv"
 
        
 initial begin
     verbose = FALSE;
+    debug = FALSE;
     reset_n = 1;
     clk_free_running = 0;
     txclk_fpga = 0;
@@ -69,16 +72,13 @@ initial begin
 // reset DUT
     #10 reset_n = 0;
     #100 reset_n = 1;
-    
-//    regfileOpUART(WRITE,8'h01,8'hab);
-
-//#2000 regfileOpUART(READ,8'h01,8'h00);
-//    testExternalInterfaceUART(8'hab);
-#1000      randomTestExternalInterface(100);
+    $display("\n");
+#1000   isDefaultConfig();
+#1000      randomTestExternalInterface(NUMTRIALS,debug);
 
 // test RX rejection of run start bit
     #1000 clk_en = 1;
-    #1000 $display("Testing runt start bit rejection");
+    #1000 $display("\nTesting runt start bit rejection");
     posi_tx_en = 0;
     #15 posi_tx_en = 1;
     #1000 clk_en = 0;

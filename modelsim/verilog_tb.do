@@ -11,6 +11,7 @@ switch $SIM_LEVEL {
     do {compile_src.do}
 # run vsim
     ### for code coverage ###
+    #vsim -coverage -voptargs="+cover=bcfst" -suppress 12027 external_interface_tb  -vopt -voptargs="+acc" -sv_seed random
     vsim -coverage -voptargs="+cover=bcfst" -suppress 12027 digital_core_tb  -vopt -voptargs="+acc" -sv_seed random
     ### for simulation ###
 #   vsim -suppress 12027 digital_core_tb -vopt -voptargs="+acc -xprop,mode=resolve" -sv_seed random
